@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@Transactional
 @AutoConfigureMockMvc
 class JokeControllerTest {
     @Autowired
@@ -39,7 +38,7 @@ class JokeControllerTest {
         String json = mapper.writeValueAsString(expected);
         expected.setJokeId(1L);
         when(jpaJokeService.createJoke(any(Joke.class))).thenReturn(expected);
-        mvc.perform(post("/api/jokes").content(json).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post("/api/joke").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.jokeId").value(expected.getJokeId()));
     }
@@ -51,25 +50,25 @@ class JokeControllerTest {
         ArrayList<Joke> expectedJokes = new ArrayList<>();
         expectedJokes.add(expected);
         when(jpaJokeService.getAllJokes()).thenReturn(expectedJokes);
-        mvc.perform(get("/api/jokes"))
+        mvc.perform(get("/api/joke"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].jokesId").value(expected.getJokeId()));
+                .andExpect(jsonPath("$[0].jokeId").value(expected.getJokeId()));
     }
 
     @Test
-    public void getAllJokesByValue() throws Exception{
+    public void getAllJokesByCategory() throws Exception{
         Joke expected = new Joke();
         expected.setJokeId(1L);
         expected.setJoke("Knock knock!");
         expected.setCategory(Category.DADJOKES);
         ArrayList<Joke> expectedJokes = new ArrayList<>();
         expectedJokes.add(expected);
-        when(jpaJokeService.getAllJokesByValue(any(Category.class))).thenReturn(expectedJokes);
-        mvc.perform(get("/api/jokes/value?value=DADJOKES"))
+        when(jpaJokeService.getAllJokesByCategory(any(Category.class))).thenReturn(expectedJokes);
+        mvc.perform(get("/api/joke/category?category=DADJOKES"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].longtext").value(expected.getJoke()))
-                .andExpect(jsonPath("$[0].jokeid").value(expected.getJokeId()))
-                .andExpect(jsonPath("$[0].value").value(expected.getCategory().toString()));
+                .andExpect(jsonPath("$[0].joke").value(expected.getJoke()))
+                .andExpect(jsonPath("$[0].jokeId").value(expected.getJokeId()))
+                .andExpect(jsonPath("$[0].category").value(expected.getCategory().toString()));
     }
 
     @Test
@@ -81,7 +80,7 @@ class JokeControllerTest {
         patchJoke.setCategory(Category.DADJOKES);
         String json = mapper.writeValueAsString(patchJoke);
         when(jpaJokeService.update(anyLong(), any(Joke.class))).thenReturn(expected);
-        mvc.perform(patch("/api/jokes/1").content(json).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(patch("/api/joke/1").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(expected));
     }
@@ -89,7 +88,7 @@ class JokeControllerTest {
     @Test
     public void deleteJokeById() throws Exception{
         when(jpaJokeService.deleteById(anyLong())).thenReturn(true);
-        mvc.perform(delete("/api/jokes/1"))
+        mvc.perform(delete("/api/joke/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
     }

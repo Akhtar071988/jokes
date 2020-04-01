@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "jokes")
+@Table(name = "joke")
 public class Joke {
         @Id
-        @Column
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column
         private long jokeId;
         @Column(name = "category")
         @Enumerated(EnumType.STRING)
@@ -50,14 +50,8 @@ public class Joke {
         return joke;
     }
 
-    public void setJoke(String longtext) {
-        this.joke = longtext;
-    }
-
-    public void update(Joke expected) {
-        if(expected.getJokeId()!=0)this.setJokeId(expected.getJokeId());
-        if(expected.getCategory()!=null)this.setCategory(expected.getCategory());
-        if(expected.getJoke()!=null)this.setJoke(expected.getJoke());
+    public void setJoke(String joke) {
+        this.joke = joke;
     }
 
     @Override
@@ -73,5 +67,11 @@ public class Joke {
     @Override
     public int hashCode() {
         return Objects.hash(getJokeId(), getCategory(), getJoke());
+    }
+
+    public void update(Joke updateJoke){
+        if(updateJoke.getCategory()!=null)this.setCategory(updateJoke.getCategory());
+        if(updateJoke.getJokeId()!=0)this.setJokeId(updateJoke.getJokeId());
+        if(updateJoke.getJoke()!=null)this.setJoke(updateJoke.getJoke());
     }
 }

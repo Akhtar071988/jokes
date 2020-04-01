@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/jokes")
+@RequestMapping("/api/joke")
 public class JokeController {
         JpaJokeService jpaJokeService;
 
@@ -16,19 +16,19 @@ public class JokeController {
             this.jpaJokeService = jpaJokeService;
         }
 
-        @PostMapping("/jokes")
-        public Joke createJoke(@RequestBody Joke jokes) {
-            return jpaJokeService.createJoke(jokes);
+        @PostMapping
+        public Joke createJoke(@RequestBody Joke input) {
+            return jpaJokeService.createJoke(input);
         }
 
-        @GetMapping("/jokes")
-        public List<Joke> findAllJokes() {
+        @GetMapping
+        public List<Joke> getAllJokes() {
             return jpaJokeService.getAllJokes();
         }
 
-        @GetMapping("/value")
-         public List<Joke> getAllJokesByValue(@RequestParam Category jokesValue){
-            return jpaJokeService.getAllJokesByValue(jokesValue);
+        @GetMapping("/category")
+         public List<Joke> getAllJokesByCategory(@RequestParam Category category){
+            return jpaJokeService.getAllJokesByCategory(category);
         }
 
         @PatchMapping("/{id}")
@@ -36,6 +36,8 @@ public class JokeController {
             return jpaJokeService.update(id, updateJoke);
         }
 
-        @DeleteMapping("jokes/{id}")
-        public void deleteJokeById(@PathVariable Long id){ jpaJokeService.deleteById(id); }
+        @DeleteMapping("/{id}")
+        public boolean updateJoke(@PathVariable long id){
+        return jpaJokeService.deleteById(id);
+    }
 }

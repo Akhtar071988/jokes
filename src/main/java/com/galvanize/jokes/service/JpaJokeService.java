@@ -19,8 +19,8 @@ public class JpaJokeService {
         return jpaJokeRepository.save(input);
     }
 
-    public List<Joke> getAllJokesByValue(Category value) {
-        return jpaJokeRepository.findAllByValue(value);
+    public List<Joke> getAllJokesByCategory(Category category) {
+        return jpaJokeRepository.findAllByCategory(category);
     }
 
     public Joke update(long jokeId, Joke updateJoke) {
